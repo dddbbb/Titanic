@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Titanic disaster</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Titanic disaster">
+  <meta name="author" content="dddbbb">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/nvd3/css/nv.d3.css"></link>
+<link rel=stylesheet href="libraries/widgets/nvd3/css/rNVD3.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  <script src="libraries/widgets/nvd3/js/jquery-1.8.2.min.js"></script>
+<script src="libraries/widgets/nvd3/js/d3.v3.min.js"></script>
+<script src="libraries/widgets/nvd3/js/nv.d3.min-new.js"></script>
+<script src="libraries/widgets/nvd3/js/fisheye.js"></script>
+
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Titanic disaster</h1>
+    <h2>Chance to survive onboard</h2>
+    <p>dddbbb<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>About Project</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Application predicts chance to survive onboard Titanic by passanger data.</p>
+
+<p>Used dataset from Kaggle&#39;s <a href="http://www.kaggle.com/c/titanic", target="_blank">&quot;Titanic: Machine Learning from Disaster&quot;</a> competition.</p>
+
+<p>For predicting was taken 7 variables from dataset, and builted random forest model</p>
+
+<p>Model has about 0.77 accuracy amd used only for demonstration purpouse</p>
+
+<p>Model saved to a file and used in server.ui part of shiny application.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Male Data by Pclass</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>For some explaratory analysis take a look at &quot;Survived&quot;&quot; vs &quot;Passanger class&quot;&quot; chart by Male subset</p>
+
+<p>(Dark colors for &quot;Died&quot;, Bright for &quot;Survived&quot;)</p>
+
+<div id = 'chart1' class = 'rChart nvd3'></div>
+
+<script type='text/javascript'>
+ $(document).ready(function(){
+      drawchart1()
+    });
+    function drawchart1(){  
+      var opts = {
+ "dom": "chart1",
+"width":    800,
+"height":    400,
+"x": "Pclass",
+"y": "freq",
+"group": "Survived",
+"type": "pieChart",
+"id": "chart1" 
+},
+        data = [
+ {
+ "Pclass": "1",
+"Survived": "Died",
+"freq": 77 
+},
+{
+ "Pclass": "1",
+"Survived": "Survived",
+"freq": 45 
+},
+{
+ "Pclass": "2",
+"Survived": "Died",
+"freq": 91 
+},
+{
+ "Pclass": "2",
+"Survived": "Survived",
+"freq": 17 
+},
+{
+ "Pclass": "3",
+"Survived": "Died",
+"freq": 300 
+},
+{
+ "Pclass": "3",
+"Survived": "Survived",
+"freq": 47 
+} 
+]
+  
+      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
+        var data = d3.nest()
+          .key(function(d){
+            //return opts.group === undefined ? 'main' : d[opts.group]
+            //instead of main would think a better default is opts.x
+            return opts.group === undefined ? opts.y : d[opts.group];
+          })
+          .entries(data);
+      }
+      
+      if (opts.disabled != undefined){
+        data.map(function(d, i){
+          d.disabled = opts.disabled[i]
+        })
+      }
+      
+      nv.addGraph(function() {
+        var chart = nv.models[opts.type]()
+          .width(opts.width)
+          .height(opts.height)
+          
+        if (opts.type != "bulletChart"){
+          chart
+            .x(function(d) { return d[opts.x] })
+            .y(function(d) { return d[opts.y] })
+        }
+          
+         
+        
+          
+        
+
+        
+        
+        
+      
+       d3.select("#" + opts.id)
+        .append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+       nv.utils.windowResize(chart.update);
+       return chart;
+      });
+    };
+</script>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Female Data by Pclass</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>And for Female (Dark colors for &quot;Died&quot;, Bright for &quot;Survived&quot;)</p>
+
+<div id = 'chart2' class = 'rChart nvd3'></div>
+
+<script type='text/javascript'>
+ $(document).ready(function(){
+      drawchart2()
+    });
+    function drawchart2(){  
+      var opts = {
+ "dom": "chart2",
+"width":    800,
+"height":    400,
+"x": "Pclass",
+"y": "freq",
+"group": "Survived",
+"type": "pieChart",
+"id": "chart2" 
+},
+        data = [
+ {
+ "Pclass": "1",
+"Survived": "Died",
+"freq": 3 
+},
+{
+ "Pclass": "1",
+"Survived": "Survived",
+"freq": 91 
+},
+{
+ "Pclass": "2",
+"Survived": "Died",
+"freq": 6 
+},
+{
+ "Pclass": "2",
+"Survived": "Survived",
+"freq": 70 
+},
+{
+ "Pclass": "3",
+"Survived": "Died",
+"freq": 72 
+},
+{
+ "Pclass": "3",
+"Survived": "Survived",
+"freq": 72 
+} 
+]
+  
+      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
+        var data = d3.nest()
+          .key(function(d){
+            //return opts.group === undefined ? 'main' : d[opts.group]
+            //instead of main would think a better default is opts.x
+            return opts.group === undefined ? opts.y : d[opts.group];
+          })
+          .entries(data);
+      }
+      
+      if (opts.disabled != undefined){
+        data.map(function(d, i){
+          d.disabled = opts.disabled[i]
+        })
+      }
+      
+      nv.addGraph(function() {
+        var chart = nv.models[opts.type]()
+          .width(opts.width)
+          .height(opts.height)
+          
+        if (opts.type != "bulletChart"){
+          chart
+            .x(function(d) { return d[opts.x] })
+            .y(function(d) { return d[opts.y] })
+        }
+          
+         
+        
+          
+        
+
+        
+        
+        
+      
+       d3.select("#" + opts.id)
+        .append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+       nv.utils.windowResize(chart.update);
+       return chart;
+      });
+    };
+</script>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Interface of app</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="./assets/img/ui.png" height = "550" width = "900"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>The End</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Link to app <a href = "https://dddbbb.shinyapps.io/Titanic" target="_blank">Link to app</a></p>
+
+<p>Thank you!</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='About Project'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Male Data by Pclass'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Female Data by Pclass'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Interface of app'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='The End'>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
